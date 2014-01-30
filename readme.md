@@ -8,12 +8,12 @@ Features at a [glance](https://docs.google.com/presentation/d/1BzFZSpVx7qqcOK8QO
  * Configurable and customizable storage drivers
  * Generate URIs for images based on which storage driver is in use
  * Image processing chains & caching
- * A powerful and agnostic gallery batch processor
+ * A powerful and agnostic slot-batch processor
 
 
 ## Setup
 
-To get Imager ready for use in your project, take the usual steps for setting up a Laravel 4 pacakge.
+To get Imager ready for use in your project, take the usual steps for setting up a Laravel 4 package.
 
  * Add `tippingcanoe/imager` to your `composer.json` file.
  * Run `composer update` at the root of your project.
