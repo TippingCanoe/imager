@@ -1,0 +1,30 @@
+{
+    "name": "tippingcanoe/imager",
+    "description": "Image attachment and management for your Eloquent models!",
+    "authors": [
+        {
+            "name": "Alexander Trauzzi",
+            "email": "a.trauzzi@tippingcanoe.com"
+        }
+    ],
+
+    "license": "MIT",
+
+    "require": {
+        "illuminate/foundation": "4.*",
+        "illuminate/support": "4.*",
+        "illuminate/database": "4.*",
+        "intervention/image": "1.*"
+    },
+
+    "autoload": {
+		"classmap": [
+			"src/migrations"
+		],
+        "psr-0": {
+            "TippingCanoe\\Imager": "src/"
+        }
+    },
+
+    "minimum-stability": "dev"
+}
