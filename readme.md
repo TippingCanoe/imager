@@ -7,7 +7,7 @@ Features at a [glance](https://docs.google.com/presentation/d/1BzFZSpVx7qqcOK8QO
  * Attach images to any eloquent model via an interface and an optionally supplied trait
  * Configurable and customizable storage drivers
  * Generate URIs for images based on which storage driver is in use
- * Image processing chains & caching
+ * Image processing chains & caching, done on retrieval not on storage
  * A powerful and agnostic gallery batch processor
 
 
@@ -37,7 +37,7 @@ Imager's filtering chains are a powerful feature that allow you to orchestrate a
 
  * Attempts to instantiate the indicated class which must implement `TippingCanoe\Imager\Processing\Filter`
  * If the filter's configuration was an array, each key in the second index will be called as setter methods on the subclass
- * Call the method `process` on the subclass passing in the original image and the database entry for the image
+ * Calls the method `process` on the subclass passing in the original image and the database entry for the image
  
 You will most likely want to pre-configure filter chains for your project so that you don't have to repeat them over the course of retrieving variations.  Imager uses a simple array schema to define filtering chains.  Here's a sample of one:
 
@@ -86,7 +86,7 @@ The two optional, secondary pieces of information that Imager makes use of are `
 
 ### Trait
 
-If you plan on attaching images to a model (User, Item, Gallery), you must implement the interface `TippingCanoe\Imager\Model\Imageable` on that model.  This will mandate a method that you can either implement yourself or conveniently keep in sync with Imager by using the trait `TippingCanoe\Imager\Model\ImageableImpl`.
+If you plan on attaching images to a model (User, Item, Gallery), that model must implement the interface `TippingCanoe\Imager\Model\Imageable`.  This will mandate a method that you can either implement yourself or conveniently keep in sync with Imager by using the trait `TippingCanoe\Imager\Model\ImageableImpl`.
 
 
 ### Saving
@@ -141,7 +141,7 @@ A sample use case for slots would be an "Item" class that can have an image gall
 
 It's common for implementations to require a way to submit multiple changes to an imageable's images in a single pass.  These changes can sometimes present conflicts and be challenging to resolve.
 
-As a convenience, Imager supplies a batch method off the service that allows these bulk operations to be performed.  The operations are scoped by imageable and performed by-slot in a safe order.
+As a convenience, Imager supplies a batch method off the service that allows these bulk operations to be performed.  The operations are scoped by imageable and performed slot-by-slot in a safe order.
 
 The structure of the schema is caller agnostic and in the unavoidable case of a conflict will null-out the slot of any images being displaced.
 
@@ -163,14 +163,14 @@ Here's a sample of the schema used when performing batch operations:
 ```
 In this example, the following actions would be taken - in order:
 
- * The images in slot 1 and 2 are be swapped
+ * The images in slot 1 and 2 are swapped
  * The image in slot 3 is moved to the 'thumbnail' slot
  * The image in slot 4 will be deleted
  * The image found at the URI will be downloaded and inserted into slot 5
 
 The file array `$newFiles` will be keyed by slot and could in theory contain new a new image for slot 4.
 
-When an image is told to move to a new slot, if there is one laready in the target slot, they are swapped.  If an uploaded image attempts to go into an already-occupied slot, the image currently in the slot will have it's slot nulled out.
+When an image is told to move to a new slot, if there is one aready in the target slot, they are swapped.  If an uploaded image attempts to go into an already-occupied slot, the image currently in the slot will have it's slot nulled out.
 
 It's important to note that slot keys cannot be duplicated in this schema, so it's in your best interest to submit **the simplest** batch list possible.
 
@@ -194,4 +194,4 @@ If you encounter any issues, find a bug or have any questions, feel free to open
 
 ### Credits
 
-Imager is created and maintained by [Alexander Trauzzi](http://github.com/atrauzzi) at [Tipping Canoe](http://www.tippingcanoe.com).
+Imager is created and maintained by [Alexander Trauzzi](http://goo.gl/LxDkxM) at [Tipping Canoe](http://www.tippingcanoe.com).
