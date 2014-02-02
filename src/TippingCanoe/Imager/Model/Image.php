@@ -27,6 +27,19 @@ class Image extends Model {
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Builder $query
+	 * @param string $type
+	 * @param int $id
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeForImageable(Builder $query, $type, $id) {
+		return $query
+			->where('imageable_type', $type)
+			->where('imageable_id', $id)
+		;
+	}
+
+	/**
+	 * @param \Illuminate\Database\Eloquent\Builder $query
 	 * @param string $slot
 	 * @return \Illuminate\Database\Eloquent\Builder
 	 */
@@ -93,9 +106,14 @@ class Image extends Model {
 		return $query->orderBy('RAND()');
 	}
 
-	public function scopeInNumericSlot() {
-		/* ToDo: Implement */
-		// This is a neat one because it will allow galleries to be implemented alongside named-slots.
+	/**
+	 * Only retrieve images whose slots are integers.
+	 *
+	 * @param Builder $query
+	 * @return Builder
+	 */
+	public function scopeInIntegerSlot(Builder $query) {
+		return $query->whereRaw(sprintf('%s.slot REGEXP \'^[[:digit:]]+$\'', $query->getQuery()->from));
 	}
 
 	public function scopeInNamedSlot() {

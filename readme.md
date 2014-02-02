@@ -8,12 +8,12 @@ Features at a [glance](https://docs.google.com/presentation/d/1BzFZSpVx7qqcOK8QO
  * Configurable and customizable storage drivers
  * Generate URIs for images based on which storage driver is in use
  * Image processing chains & caching
- * A powerful and agnostic slot-batch processor
+ * A powerful and agnostic gallery batch processor
 
 
 ## Setup
 
-To get Imager ready for use in your project, take the usual steps for setting up a Laravel 4 package.
+To get Imager ready for use in your project, take the usual steps for setting up a Laravel 4 pacakge.
 
  * Add `tippingcanoe/imager` to your `composer.json` file.
  * Run `composer update` at the root of your project.
@@ -105,14 +105,14 @@ Saving images is done via the Imager service which can either be accessed via th
 	$image = Imager::saveFromFile($file, $imageable, $attributes);
 ```
 
-Imager will return an instance of `TippingCanoe\Imager\Model\Image` upon a successful save, if you supplied one, the image record will be associated with the imageable you supplied and any additional attributes will be passed through to the save as well.
+Imager will return an instance of `TippingCanoe\Imager\Model\Image` upon a successful save.  If you supplied one, the image record will be associated with an imageable.  Any additional attributes will be passed through to the save as well.
 
 ### Retrieval
 
-When retrieving an image, you will need a way to identify it:
+When retrieving an individual image, you will need a way to identify it:
 
  * The image's `id`
- * The image's slot
+ * The image's imageable and a slot
  * An imageable's `images()` relation
 
 Most of the time you will have at least one of these three pieces of information which will then allow you to obtain a URI to the physical file of the image.
@@ -123,7 +123,7 @@ Most of the time you will have at least one of these three pieces of information
 	Imager::getPublicUriById($id, $filters);
 ```
 
-When retrieving images from imager, it's helpful to remember that anywhere you see "imageable" is optional and omitting it or providing null it means _"global"_.  Similarly, "filters" is also optional and omitting this value, providing null or an empty array will mean _"the original image"_.
+When retrieving images from imager, it's helpful to remember that anywhere you see "imageable" is optional and omitting it or providing null means _"global"_.  Similarly, "filters" is also optional and omitting this value, providing null or an empty array will mean _"the original image"_.
 
 
 ### Slots
@@ -150,9 +150,9 @@ Here's a sample of the schema used when performing batch operations:
 ```
 	$operations = [
 		1 => 2,
-		2 => 'thumbnail',
-		3 => null,
-		4 => 'http://placehold.it/200x200&text=Imager'
+		3 => 'thumbnail',
+		4 => null,
+		5 => 'http://placehold.it/200x200&text=Imager'
 	];
 
 	/** @var \Symfony\Component\HttpFoundation\File\File[] $newFiles */
@@ -163,16 +163,16 @@ Here's a sample of the schema used when performing batch operations:
 ```
 In this example, the following actions would be taken - in order:
 
- * The images in slot 1 and 2 would be swapped
- * The image in slot 2 would be moved to the 'thumbnail' slot
- * The image in slot 3 will be deleted
- * The image found at the URL will be downloaded and inserted into slot 3
- 
-The file array `$newFiles` will be keyed by slot and could in theory contain new images for slots 1 and 3.  
+ * The images in slot 1 and 2 are be swapped
+ * The image in slot 3 is moved to the 'thumbnail' slot
+ * The image in slot 4 will be deleted
+ * The image found at the URI will be downloaded and inserted into slot 5
 
-When an image is told to move to a new slot, if there is an image in the target slot, they will swap.  If an uploaded image attempts to go into an already-occupied slot, the image currently in the slot will have it's slot nulled out.
+The file array `$newFiles` will be keyed by slot and could in theory contain new a new image for slot 4.
 
-It's important to note that slot keys cannot be duplicated, so it's in your best interest to submit **the simplest** batch list possible.
+When an image is told to move to a new slot, if there is one laready in the target slot, they are swapped.  If an uploaded image attempts to go into an already-occupied slot, the image currently in the slot will have it's slot nulled out.
+
+It's important to note that slot keys cannot be duplicated in this schema, so it's in your best interest to submit **the simplest** batch list possible.
 
 
 ## Drivers

@@ -34,7 +34,7 @@ class DbImage implements Image {
 	public function getBySlot($slot, Imageable $imageable = null) {
 
 		if($imageable)
-			$query = $imageable->images();
+			$query = ImageModel::forImageable(get_class($imageable), $imageable->getKey());
 		else
 			$query = ImageModel::unattached();
 
