@@ -8,22 +8,22 @@ class Image extends Model {
 
     protected $table = 'imager_image';
 
-    protected $fillable = [
-        'imageable_id', 
-        'imageable_type',
+    	protected $fillable = [
+		'imageable_id', 
+		'imageable_type',
 		'slot',
-        'width',
-        'height',
-        'average_color',
+		'width',
+		'height',
+		'average_color',
 		'mime_type'
-    ];
+	];
 
 	/**
 	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
 	 */
 	public function imageable() {
-        return $this->morphTo();
-    }
+		return $this->morphTo();
+	}
 
 	/**
 	 * @param \Illuminate\Database\Eloquent\Builder $query
