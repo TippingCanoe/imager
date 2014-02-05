@@ -128,7 +128,7 @@ When retrieving images from imager, it's helpful to remember that anywhere you s
 
 ### Slots
 
-Imager feature a concept known as slots which at it's very core is just a string value.  Slots are used to order and/or key images by their imageable.  There are helper scopes on the `TippingCanoe\Imager\Model\Image` class to help with retrieving images based on their slot values.
+Imager features a concept known as slots which at it's very core is just a string value.  Slots are used to order and/or key images by their imageable.  There are helper scopes on the `TippingCanoe\Imager\Model\Image` class to help with retrieving images based on their slot values.
 
 ```
 Note: When storing images without an imageable (globally), keep in mind that they are all sharing the same slot scope and cannot have duplicates.
