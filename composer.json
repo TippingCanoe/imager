@@ -9,10 +9,12 @@
 	],
 	"license": "MIT",
 	"require": {
+		"php": ">=5.4.0",
 		"illuminate/foundation": "4.*",
 		"illuminate/support": "4.*",
 		"illuminate/database": "4.*",
-		"intervention/image": "1.*"
+		"intervention/image": "1.*",
+		"stojg/crop": "1.*"
 	},
 	"autoload": {
 		"classmap": [
