@@ -15,7 +15,7 @@
 		"illuminate/database": "4.*",
 		"intervention/image": "1.*",
 		"stojg/crop": "1.*",
-        "aws/aws-sdk-php": "2.5.2"
+    "aws/aws-sdk-php": "2.5.2"
 	},
 	"autoload": {
 		"classmap": [
