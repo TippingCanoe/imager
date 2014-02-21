@@ -22,12 +22,12 @@ class S3 implements Driver{
     /**
      * @var string
      */
-    private $awsKey;
+    protected $awsKey;
 
     /**
      * @var string
      */
-    private $awsSecret;
+    protected $awsSecret;
 
 
     /**
@@ -47,20 +47,11 @@ class S3 implements Driver{
     }
 
     /**
-     * Build the S3 Client
+     *
      */
-    public function __construct()
+    public function setAwsBucket($bucket)
     {
-        // @todo get aws configuration from config file
-        $this->awsBucket = '';
-        $this->awsKey = '';
-        $this->awsSecret = '';
-
-        $this->s3 = S3Client::factory(array(
-            'key'    => $this->awsKey,
-            'secret' => $this->awsSecret,
-        ));
-
+        $this->awsBucket = $bucket;
     }
 
     /**
@@ -74,6 +65,8 @@ class S3 implements Driver{
      */
     public function saveFile(File $file, Image $image, array $filters = [])
     {
+        // Create connection
+        $this->makeS3();
         // Upload a file.
         try {
             $this->s3->putObject(array(
@@ -96,7 +89,10 @@ class S3 implements Driver{
      */
     public function getPublicUri(Image $image, array $filters = [])
     {
-        //dd($this->generateFileName($image, $filters));
+        // Create connection
+        $this->makeS3();
+
+        // Get a timed url
         try
         {
             return $this->s3->getObjectUrl($this->awsBucket, $this->generateFileName($image, $filters), '+10 minutes');
@@ -114,6 +110,9 @@ class S3 implements Driver{
      */
     public function has(Image $image, array $filters = [])
     {
+        // Create connection
+        $this->makeS3();
+        // Check if file exists
         return $this->s3->doesObjectExist(
             $this->awsBucket,
             $this->generateFileName($image, $filters));
@@ -129,7 +128,9 @@ class S3 implements Driver{
      */
     public function delete(Image $image, array $filters = [])
     {
-        // Upload a file.
+        // Create connection
+        $this->makeS3();
+        // Delete a file.
         try {
             $this->s3->deleteObject(array(
                 'Bucket' => $this->awsBucket,
@@ -148,12 +149,17 @@ class S3 implements Driver{
      */
     public function tempOriginal(Image $image)
     {
+        // Create connection
+        $this->makeS3();
+
+        // Recreate original filename
         $tempOriginalPath = tempnam(sys_get_temp_dir(), null);
         $originalPath = sprintf('%s-%s.%s',
             $image->getKey(),
             $this->generateHash($image),
             Mime::getExtensionForMimeType($image->mime_type)
         );
+        // Download file
         try {
             $this->s3->getObject(array(
                 'Bucket' => $this->awsBucket,
@@ -166,12 +172,19 @@ class S3 implements Driver{
         }
     }
 
+    /*
+     * ---------------------------------------------------------------------
+     *  Utility Methods
+     * ---------------------------------------------------------------------
+     */
+
     /**
      * @param Image $image
      * @param array $filters
      * @return string
      */
     protected function generateFileName(Image $image, array $filters = []) {
+
         return sprintf('%s-%s.%s',
             $image->getKey(),
             $this->generateHash($image, $filters),
@@ -215,5 +228,13 @@ class S3 implements Driver{
 
         return $array;
 
+    }
+
+    protected function makeS3()
+    {
+        $this->s3 = S3Client::factory(array(
+            'key'    => $this->awsKey,
+            'secret' => $this->awsSecret,
+        ));
     }
 }
