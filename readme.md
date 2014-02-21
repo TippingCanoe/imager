@@ -32,6 +32,21 @@ Note: If you are using type-hinted dependency injection in your project, as a co
 ### Storage
 If you open the copy of `config.php` that was created by the last step during setup, you will see it is already populated with configuration options for the most typical of setups.  The `TippingCanoe\Imager\Storage\Filesystem` driver is the most basic which simply stores image files in your site's public directory.
 
+#### Amazon S3 Driver
+Replace the filesystem driver configuration in the 'config.php' file with the Amazon AWS configuration below.
+```
+[
+	'storage' =>
+	[
+		'TippingCanoe\Imager\Storage\S3' =>
+		[
+			'aws_key' => 'YOUR_KEY_HERE',
+			'aws_secret' => 'YOUR_SECRET_HERE',
+            'aws_bucket' => 'imager-bucket'
+		]
+	]
+]
+```
 ### Filters
 Imager's filtering chains are a powerful feature that allow you to orchestrate arbitrary combinations of manipulations when retrieving images.  When processing a chain, Imager does the following for each filter in the chain:
 
