@@ -13,12 +13,12 @@
 
         ],
 
-        // Amazon S3 Storage Driver
+		// Amazon S3 Storage Driver
 		/*
-        'TippingCanoe\Imager\Storage\S3' => [
-            'bucket' => 'imager-bucket'
-        ],
-        */
+		'TippingCanoe\Imager\Storage\S3' => [
+			'bucket' => 'imager'
+		],
+		*/
 
     ],
 
