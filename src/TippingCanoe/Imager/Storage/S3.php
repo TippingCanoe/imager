@@ -4,7 +4,6 @@ use Symfony\Component\HttpFoundation\File\File;
 use TippingCanoe\Imager\Model\Image;
 use TippingCanoe\Imager\Mime;
 use Aws\S3\S3Client;
-use Aws\S3\Exception\S3Exception;
 use Aws\S3\Enum\CannedAcl;
 
 
@@ -46,17 +45,12 @@ class S3 implements Driver{
 	public function saveFile(File $file, Image $image, array $filters = []) {
 
 		// Upload a file.
-		try {
-			$this->s3->putObject(array(
-				'Bucket'        => $this->awsBucket,
-				'Key'           => $this->generateFileName($image, $filters),
-				'SourceFile'    => $file->getRealPath(),
-				'ACL'           => CannedAcl::PRIVATE_ACCESS,
-			));
-		}
-		catch(S3Exception $e) {
-			echo "There was an error uploading the file.\n";
-		}
+		$this->s3->putObject(array(
+			'Bucket'        => $this->awsBucket,
+			'Key'           => $this->generateFileName($image, $filters),
+			'SourceFile'    => $file->getRealPath(),
+			'ACL'           => CannedAcl::PRIVATE_ACCESS,
+		));
 
 	}
 
@@ -70,12 +64,7 @@ class S3 implements Driver{
 	public function getPublicUri(Image $image, array $filters = []) {
 
 		// Get a timed url
-		try {
-			return $this->s3->getObjectUrl($this->awsBucket, $this->generateFileName($image, $filters), '+10 minutes');
-		}
-		catch(S3Exception $e) {
-			echo "There was an error generating the file url.\n";
-		}
+		return $this->s3->getObjectUrl($this->awsBucket, $this->generateFileName($image, $filters), '+10 minutes');
 
 	}
 
@@ -107,15 +96,11 @@ class S3 implements Driver{
 	public function delete(Image $image, array $filters = []) {
 
 		// Delete a file.
-		try {
-			$this->s3->deleteObject(array(
-				'Bucket' => $this->awsBucket,
-				'Key'    => $this->generateFileName($image, $filters),
-			));
-		}
-		catch(S3Exception $e) {
-			echo "There was an error deleting the file.\n";
-		}
+		$this->s3->deleteObject(array(
+			'Bucket' => $this->awsBucket,
+			'Key'    => $this->generateFileName($image, $filters),
+		));
+
 	}
 
 	/**
@@ -128,23 +113,21 @@ class S3 implements Driver{
 
 		// Recreate original filename
 		$tempOriginalPath = tempnam(sys_get_temp_dir(), null);
+
 		$originalPath = sprintf('%s-%s.%s',
 			$image->getKey(),
 			$this->generateHash($image),
 			Mime::getExtensionForMimeType($image->mime_type)
 		);
+
 		// Download file
-		try {
-			$this->s3->getObject(array(
-				'Bucket' => $this->awsBucket,
-				'Key'    => $originalPath,
-				'SaveAs' => $tempOriginalPath
-			));
-			return new File($tempOriginalPath);
-		}
-		catch(S3Exception $e) {
-			echo "There was an error deleting the file.\n";
-		}
+		$this->s3->getObject(array(
+			'Bucket' => $this->awsBucket,
+			'Key'    => $originalPath,
+			'SaveAs' => $tempOriginalPath
+		));
+
+		return new File($tempOriginalPath);
 
 	}
 
