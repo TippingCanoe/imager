@@ -7,10 +7,11 @@ use Aws\S3\S3Client;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\Enum\CannedAcl;
 
+
 class S3 implements Driver{
 
     /**
-     * @var Aws\S3\S3Client
+     * @var \Aws\S3\S3Client
      */
     protected $s3;
 
@@ -19,38 +20,17 @@ class S3 implements Driver{
      */
     protected $awsBucket;
 
-    /**
-     * @var string
-     */
-    protected $awsKey;
+	/**
+	 * @param S3Client $s3Client
+	 */
+	public function __construct(S3Client $s3Client) {
+		$this->s3 = $s3Client;
+	}
 
     /**
-     * @var string
+     * @param string $bucket
      */
-    protected $awsSecret;
-
-
-    /**
-     * @param string $key
-     */
-    public function setAwsKey($key)
-    {
-        $this->awsKey = $key;
-    }
-
-    /**
-     * @param $secret
-     */
-    public function setAwsSecret($secret)
-    {
-        $this->awsSecret = $secret;
-    }
-
-    /**
-     *
-     */
-    public function setAwsBucket($bucket)
-    {
+    public function setBucket($bucket) {
         $this->awsBucket = $bucket;
     }
 
@@ -63,10 +43,8 @@ class S3 implements Driver{
      * @param Image $image
      * @param array $filters
      */
-    public function saveFile(File $file, Image $image, array $filters = [])
-    {
-        // Create connection
-        $this->makeS3();
+    public function saveFile(File $file, Image $image, array $filters = []) {
+
         // Upload a file.
         try {
             $this->s3->putObject(array(
@@ -75,9 +53,11 @@ class S3 implements Driver{
                 'SourceFile'    => $file->getRealPath(),
                 'ACL'           => CannedAcl::PRIVATE_ACCESS,
             ));
-        } catch (S3Exception $e) {
+        }
+		catch(S3Exception $e) {
             echo "There was an error uploading the file.\n";
         }
+
     }
 
     /**
@@ -87,18 +67,16 @@ class S3 implements Driver{
      * @param array $filters
      * @return string
      */
-    public function getPublicUri(Image $image, array $filters = [])
-    {
-        // Create connection
-        $this->makeS3();
+    public function getPublicUri(Image $image, array $filters = []) {
 
         // Get a timed url
-        try
-        {
+        try {
             return $this->s3->getObjectUrl($this->awsBucket, $this->generateFileName($image, $filters), '+10 minutes');
-        } catch (S3Exception $e) {
+        }
+		catch(S3Exception $e) {
             echo "There was an error generating the file url.\n";
         }
+
     }
 
     /**
@@ -108,14 +86,14 @@ class S3 implements Driver{
      * @param array $filters
      * @return boolean
      */
-    public function has(Image $image, array $filters = [])
-    {
-        // Create connection
-        $this->makeS3();
+    public function has(Image $image, array $filters = []) {
+
         // Check if file exists
         return $this->s3->doesObjectExist(
             $this->awsBucket,
-            $this->generateFileName($image, $filters));
+            $this->generateFileName($image, $filters))
+		;
+
     }
 
     /**
@@ -126,17 +104,16 @@ class S3 implements Driver{
      * @param Image $image
      * @param array $filters
      */
-    public function delete(Image $image, array $filters = [])
-    {
-        // Create connection
-        $this->makeS3();
+    public function delete(Image $image, array $filters = []) {
+
         // Delete a file.
         try {
             $this->s3->deleteObject(array(
                 'Bucket' => $this->awsBucket,
                 'Key'    => $this->generateFileName($image, $filters),
             ));
-        } catch (S3Exception $e) {
+        }
+		catch(S3Exception $e) {
             echo "There was an error deleting the file.\n";
         }
     }
@@ -147,10 +124,7 @@ class S3 implements Driver{
      * @param Image $image
      * @return File
      */
-    public function tempOriginal(Image $image)
-    {
-        // Create connection
-        $this->makeS3();
+    public function tempOriginal(Image $image) {
 
         // Recreate original filename
         $tempOriginalPath = tempnam(sys_get_temp_dir(), null);
@@ -167,16 +141,16 @@ class S3 implements Driver{
                 'SaveAs' => $tempOriginalPath
             ));
             return new File($tempOriginalPath);
-        } catch (S3Exception $e) {
+        }
+		catch(S3Exception $e) {
             echo "There was an error deleting the file.\n";
         }
+
     }
 
-    /*
-     * ---------------------------------------------------------------------
-     *  Utility Methods
-     * ---------------------------------------------------------------------
-     */
+	//
+	// Utility Methods
+	//
 
     /**
      * @param Image $image
@@ -190,6 +164,7 @@ class S3 implements Driver{
             $this->generateHash($image, $filters),
             Mime::getExtensionForMimeType($image->mime_type)
         );
+
     }
 
     /**
@@ -230,11 +205,4 @@ class S3 implements Driver{
 
     }
 
-    protected function makeS3()
-    {
-        $this->s3 = S3Client::factory(array(
-            'key'    => $this->awsKey,
-            'secret' => $this->awsSecret,
-        ));
-    }
 }

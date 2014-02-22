@@ -12,13 +12,28 @@
 			'public_prefix' => sprintf('%s/imager', Request::getSchemeAndHttpHost()),
 
         ],
-        /* Use this configuration for the Amazon S3 Driver
+
+        // Amazon S3 Storage Driver
+		/*
         'TippingCanoe\Imager\Storage\S3' => [
-            'aws_key' => 'YOUR_KEY_HERE',
-            'aws_secret' => 'YOUR_SECRET_HERE',
-            'aws_bucket' => 'imager-bucket',
+            'bucket' => 'imager-bucket'
         ],
         */
+
     ],
+
+	//
+	// Amazon S3 Client
+	//
+	// Uncommenting these lines tells Imager to take care
+	// of the Amazon S3 binding in the IoC.
+	//
+	// It may be that this binding is accomplished elsewhere in your
+	// project and if so, you don't need to duplicate it here.
+	//
+	//'s3' => [
+	//	'key' => 'YOUR_KEY_HERE',
+	//	'secret' => 'YOUR_SECRET_HERE',
+	//]
 
 ];

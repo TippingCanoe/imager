@@ -30,6 +30,9 @@ class ServiceProvider extends Base {
 	 */
 	public function register() {
 
+		/** @var \Illuminate\Config\Repository $config */
+		$config = $this->app->make('config');
+
 		// I'm not binding this as a singleton so that sloppy state management doesn't get a chance to ruin things.
 		$this->app->bind('Intervention\Image\Image', function (Application $app) {
 			return new Image();
@@ -37,10 +40,7 @@ class ServiceProvider extends Base {
 
 		$this->app->bind('TippingCanoe\Imager\Repository\Image', 'TippingCanoe\Imager\Repository\DbImage');
 
-		$this->app->singleton('TippingCanoe\Imager\Service', function (Application $app) {
-
-			/** @var \Illuminate\Config\Repository $config */
-			$config = $app->make('config');
+		$this->app->singleton('TippingCanoe\Imager\Service', function (Application $app) use ($config) {
 
 			// Run through and call each config option as a setter on the storage method.
 			$storageDrivers = [];
@@ -68,6 +68,15 @@ class ServiceProvider extends Base {
 			return $service;
 
 		});
+
+		//
+		// Amazon S3
+		//
+		if($s3Config = $config->get('imager::s3')) {
+			$this->app->bind('Aws\S3\S3Client', function (Application $app) use ($s3Config) {
+				return \Aws\S3\S3Client::factory($s3Config);
+			});
+		}
 
 	}
         
