@@ -168,6 +168,7 @@ class S3 implements Driver{
 		$state = $this->recursiveKeySort($state);
 
 		return md5(json_encode($state));
+
 	}
 
 	/**
