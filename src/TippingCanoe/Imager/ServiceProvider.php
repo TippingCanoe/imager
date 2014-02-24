@@ -39,6 +39,15 @@ class ServiceProvider extends Base {
 		});
 
 		$this->app->bind('TippingCanoe\Imager\Repository\Image', 'TippingCanoe\Imager\Repository\DbImage');
+		
+		//
+		// Amazon S3
+		//
+		if($s3Config = $config->get('imager::s3')) {
+			$this->app->bind('Aws\S3\S3Client', function (Application $app) use ($s3Config) {
+				return \Aws\S3\S3Client::factory($s3Config);
+			});
+		}
 
 		$this->app->singleton('TippingCanoe\Imager\Service', function (Application $app) use ($config) {
 
@@ -69,14 +78,6 @@ class ServiceProvider extends Base {
 
 		});
 
-		//
-		// Amazon S3
-		//
-		if($s3Config = $config->get('imager::s3')) {
-			$this->app->bind('Aws\S3\S3Client', function (Application $app) use ($s3Config) {
-				return \Aws\S3\S3Client::factory($s3Config);
-			});
-		}
 
 	}
         
