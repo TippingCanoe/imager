@@ -25,6 +25,7 @@ class ImageData {
 	public function __construct(File $file) {
 		$this->file = $file;
 		$this->intervention = new Intervention($file->getRealPath());
+		$this->intervention->backup();
 	}
 
 	/**
