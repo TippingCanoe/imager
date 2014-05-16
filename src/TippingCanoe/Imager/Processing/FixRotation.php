@@ -9,6 +9,10 @@ class FixRotation implements Filter {
 
 	public function process(File $file, Image $image, array $config = null) {
 
+		// Only jpeg images support EXIF.
+		if($image->mime_type != 'image/jpeg') 
+			return;
+
 		$imageData = new Intervention($file->getRealPath());
 
 		switch($imageData->exif('Orientation')) {
