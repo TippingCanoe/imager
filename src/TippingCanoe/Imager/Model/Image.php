@@ -95,7 +95,7 @@ class Image extends Model {
 	 * @return Builder
 	 */
 	public function scopeHighestRes(Builder $query) {
-		return $query->orderByRaw('width * height', 'DESC');
+		return $query->orderByRaw('(width * height) DESC');
 	}
 
 	/**
