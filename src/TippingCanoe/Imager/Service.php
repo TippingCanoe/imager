@@ -121,7 +121,7 @@ class Service {
 	 * @return string
 	 */
 	public function getPublicUriBySlot($slot, Imageable $imageable = null, $filters = []) {
-		return $this->getPublicUri($imageable->images()->inSlot($slot), $filters);
+		return $this->getPublicUri($this->getBySlot($slot, $imageable), $filters);
 	}
 
 	/**
