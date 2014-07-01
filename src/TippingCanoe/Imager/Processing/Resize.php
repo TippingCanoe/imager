@@ -41,7 +41,13 @@ class Resize implements Filter {
 
 		$imageData = new Intervention($file->getRealPath());
 
-		$imageData->resize($this->width, $this->height, $this->preserveRatio);
+		$preserveRatio = $this->preserveRatio;
+
+		$imageData->resize($this->width, $this->height, function($constraint) use ($preserveRatio) {
+			if ($preserveRatio) {
+				$constraint->aspectRatio();
+			}
+		});
 
 		$imageData->save(null, 100);
 
