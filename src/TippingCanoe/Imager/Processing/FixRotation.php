@@ -2,7 +2,7 @@
 
 use TippingCanoe\Imager\Model\Image;
 use Symfony\Component\HttpFoundation\File\File;
-use Intervention\Image\Image as Intervention;
+use Intervention\Image\ImageManagerStatic as Intervention;
 
 
 class FixRotation implements Filter {
@@ -10,10 +10,10 @@ class FixRotation implements Filter {
 	public function process(File $file, Image $image, array $config = null) {
 
 		// Only jpeg images support EXIF.
-		if($image->mime_type != 'image/jpeg') 
+		if($image->mime_type != 'image/jpeg')
 			return;
 
-		$imageData = new Intervention($file->getRealPath());
+		$imageData = Intervention::make($file->getRealPath());
 
 		switch($imageData->exif('Orientation')) {
 
