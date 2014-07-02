@@ -2,7 +2,7 @@
 
 use TippingCanoe\Imager\Model\Image;
 use Symfony\Component\HttpFoundation\File\File;
-use Intervention\Image\Image as Intervention;
+use Intervention\Image\ImageManagerStatic as Intervention;
 
 class Compress implements Filter {
 
@@ -18,7 +18,7 @@ class Compress implements Filter {
 
 	public function process(File $file, Image $image, array $config = null) {
 
-		$imageData = new Intervention($file->getRealPath());
+		$imageData = Intervention::make($file->getRealPath());
 
 		$imageData->save(null, $this->quality);
 

@@ -2,7 +2,7 @@
 
 use TippingCanoe\Imager\Model\Image;
 use Symfony\Component\HttpFoundation\File\File;
-use Intervention\Image\Image as Intervention;
+use Intervention\Image\ImageManagerStatic as Intervention;
 
 /**
  * Class Crop
@@ -89,7 +89,7 @@ class Crop implements Filter {
 
 	public function process(File $file, Image $image, array $config = null) {
 
-		$imageData = new Intervention($file->getRealPath());
+		$imageData = Intervention::make($file->getRealPath());
 
 		// Sections override origin data.
 		if($this->section)

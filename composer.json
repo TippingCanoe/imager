@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">=5.4.0",
 		"illuminate/database": "4.*",
-		"intervention/image": "1.*",
+		"intervention/image": "2.*",
 		"stojg/crop": "1.*",
 		"aws/aws-sdk-php": "2.5.2"
 	},
