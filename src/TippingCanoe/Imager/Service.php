@@ -118,10 +118,13 @@ class Service {
 	 * @param string $slot
 	 * @param Imageable $imageable
 	 * @param array $filters
-	 * @return string
+	 * @return string|null
 	 */
 	public function getPublicUriBySlot($slot, Imageable $imageable = null, $filters = []) {
-		return $this->getPublicUri($this->getBySlot($slot, $imageable), $filters);
+		if($image = $this->getBySlot($slot, $imageable))
+			return $this->getPublicUri($image, $filters);
+
+		return null;
 	}
 
 	/**
