@@ -14,6 +14,8 @@ class Blur implements Filter {
 
 	protected $blur = 30;
 
+	protected $compression = 100;
+
 	/**
 	 * @param string $sourcePath
 	 */
@@ -29,12 +31,16 @@ class Blur implements Filter {
 		$this->brightness = $value;
 	}
 
+	public function setCompression($value) {
+		$this->compression = $value;
+	}
+
 	public function process(File $file, Image $image) {
 		$imageData = Intervention::make($file->getRealPath());
 
 		$imageData->brightness($this->brightness);
 		$imageData->blur($this->blur);
-		$imageData->save();
+		$imageData->save(null, $this->compression);
 	}
 
 }
