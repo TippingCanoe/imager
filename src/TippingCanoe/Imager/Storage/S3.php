@@ -7,7 +7,7 @@ use Aws\S3\S3Client;
 use Aws\S3\Enum\CannedAcl;
 
 
-class S3 extends BaseStorage {
+class S3 extends Base {
 
 	/**
 	 * @var \Aws\S3\S3Client

@@ -1,6 +1,4 @@
-<?php
-
-namespace TippingCanoe\Imager\Storage;
+<?php namespace TippingCanoe\Imager\Storage;
 
 use TippingCanoe\Imager\Model\Image;
 use Symfony\Component\HttpFoundation\File\File;

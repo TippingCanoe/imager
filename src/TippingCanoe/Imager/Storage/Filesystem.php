@@ -4,7 +4,7 @@ use TippingCanoe\Imager\Model\Image;
 use TippingCanoe\Imager\Mime;
 use Symfony\Component\HttpFoundation\File\File;
 
-class Filesystem extends BaseStorage {
+class Filesystem extends Base {
 
 	/** @var string */
 	protected $publicPrefix;
