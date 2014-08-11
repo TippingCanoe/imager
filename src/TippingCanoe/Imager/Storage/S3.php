@@ -7,7 +7,7 @@ use Aws\S3\S3Client;
 use Aws\S3\Enum\CannedAcl;
 
 
-class S3 implements Driver{
+class S3 extends Base {
 
 	/**
 	 * @var \Aws\S3\S3Client
@@ -147,27 +147,6 @@ class S3 implements Driver{
 			$this->generateHash($image, $filters),
 			Mime::getExtensionForMimeType($image->mime_type)
 		);
-
-	}
-
-	/**
-	 * Generates a hash based on an image and it's filters.
-	 *
-	 * @param Image $image
-	 * @param array $filters
-	 * @return string
-	 */
-	protected function generateHash(Image $image, array $filters = []) {
-
-		$state = [
-			'id' => (string)$image->getKey(),
-			'filters' => $filters
-		];
-
-		// Must be recursively sorted otherwise arrays with similar keys in different orders won't have the same hash!
-		$state = $this->recursiveKeySort($state);
-
-		return md5(json_encode($state));
 
 	}
 

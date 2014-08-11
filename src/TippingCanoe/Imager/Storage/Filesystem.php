@@ -4,7 +4,7 @@ use TippingCanoe\Imager\Model\Image;
 use TippingCanoe\Imager\Mime;
 use Symfony\Component\HttpFoundation\File\File;
 
-class Filesystem implements Driver {
+class Filesystem extends Base {
 
 	/** @var string */
 	protected $publicPrefix;
@@ -127,27 +127,6 @@ class Filesystem implements Driver {
 	 */
 	protected function getPublicPrefix() {
 		return $this->publicPrefix;
-	}
-
-	/**
-	 * Generates a hash based on an image and it's filters.
-	 *
-	 * @param Image $image
-	 * @param array $filters
-	 * @return string
-	 */
-	protected function generateHash(Image $image, array $filters = []) {
-
-		$state = [
-			'id' => (string)$image->getKey(),
-			'filters' => $filters
-		];
-
-		// Must be recursively sorted otherwise arrays with similar keys in different orders won't have the same hash!
-		$state = $this->recursiveKeySort($state);
-
-		return md5(json_encode($state));
-
 	}
 
 	/**
