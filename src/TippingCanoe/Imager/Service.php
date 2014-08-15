@@ -3,7 +3,7 @@
 use Exception;
 use Illuminate\Foundation\Application;
 use TippingCanoe\Imager\Model\Image;
-use Intervention\Image\Image as Intervention;
+use Intervention\Image\ImageManager as Intervention;
 use TippingCanoe\Imager\Processing\Filter;
 use TippingCanoe\Imager\Repository\Image as ImageRepository;
 use Symfony\Component\HttpFoundation\File\File;
@@ -15,7 +15,7 @@ class Service {
 	/** @var \TippingCanoe\Imager\Repository\Image */
 	protected $imageRepository;
 
-	/** @var \Intervention\Image\Facades\Image */
+	/** @var \Intervention\Image\ImageManager */
 	protected $intervention;
 
 	/** @var \TippingCanoe\Imager\Storage\Driver[] */

@@ -2,7 +2,7 @@
 
 use Illuminate\Support\ServiceProvider as Base;
 use Illuminate\Foundation\Application;
-use Intervention\Image\Image;
+use Intervention\Image\ImageManager;
 
 
 class ServiceProvider extends Base {
@@ -34,8 +34,8 @@ class ServiceProvider extends Base {
 		$config = $this->app->make('config');
 
 		// I'm not binding this as a singleton so that sloppy state management doesn't get a chance to ruin things.
-		$this->app->bind('Intervention\Image\Image', function (Application $app) {
-			return new Image();
+		$this->app->bind('Intervention\Image\ImageManater', function (Application $app) {
+			return new ImageManager(array('driver'=>$app->config->get('imager::driver', 'gd')));
 		});
 
 		$this->app->bind('TippingCanoe\Imager\Repository\Image', 'TippingCanoe\Imager\Repository\DbImage');
@@ -70,7 +70,7 @@ class ServiceProvider extends Base {
 
 			$service = new Service(
 				$app->make('TippingCanoe\Imager\Repository\Image'),
-				$app->make('Intervention\Image\Image'),
+				$app->make('Intervention\Image\ImageManager'),
 				$app,
 				$storageDrivers
 			);
@@ -89,7 +89,7 @@ class ServiceProvider extends Base {
 	 */
 	public function provides() {
 		return [
-			'Intervention\Image\Image',
+			'Intervention\Image\ImageManager',
 			'TippingCanoe\Imager\Service',
 			'TippingCanoe\Imager\Repository\Image'
 		];

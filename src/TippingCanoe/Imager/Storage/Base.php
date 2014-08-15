@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\File;
  *
  * @package TippingCanoe\Imager\Storage
  */
-abstract class BaseStorage implements Driver {
+abstract class Base implements Driver {
 
 	abstract function saveFile(File $file, Image $image, array $filters = []);
 	abstract function getPublicUri(Image $image, array $filters = []);
