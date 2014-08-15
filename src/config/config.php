@@ -1,5 +1,6 @@
 <?php return [
 
+	'driver' => 'gd',
 	// Multiple storage options.
 	'storage' => [
 
