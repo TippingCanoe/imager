@@ -2,7 +2,7 @@
 
 use TippingCanoe\Imager\Model\Image;
 use Symfony\Component\HttpFoundation\File\File;
-use Intervention\Image\ImageManagerStatic as Intervention;
+use Intervention\Image\ImageManager as Intervention;
 
 
 class Blur implements Filter {
@@ -16,6 +16,11 @@ class Blur implements Filter {
 
 	protected $compression = 100;
 
+	protected $intervention;
+
+	public function __construct(Intervention $intervention) {
+		$this->intervention = $intervention;
+	}
 	/**
 	 * @param string $sourcePath
 	 */
@@ -36,7 +41,7 @@ class Blur implements Filter {
 	}
 
 	public function process(File $file, Image $image) {
-		$imageData = Intervention::make($file->getRealPath());
+		$imageData = $this->intervention->make($file->getRealPath());
 
 		$imageData->brightness($this->brightness);
 		$imageData->blur($this->blur);
