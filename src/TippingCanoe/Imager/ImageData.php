@@ -1,6 +1,6 @@
 <?php namespace TippingCanoe\Imager;
 
-use Intervention\Image\ImageManagerStatic as Intervention;
+use Intervention\Image\Image;
 use Symfony\Component\HttpFoundation\File\File;
 
 
@@ -21,10 +21,11 @@ class ImageData {
 
 	/**
 	 * @param File $file
+	 * @param \Intervention\Image\Image $intervention
 	 */
-	public function __construct(File $file) {
+	public function __construct(File $file, Image $intervention) {
 		$this->file = $file;
-		$this->intervention = Intervention::make($file->getRealPath());
+		$this->intervention = $intervention;
 		$this->intervention->backup();
 	}
 

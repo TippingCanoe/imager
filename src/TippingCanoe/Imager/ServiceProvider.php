@@ -33,8 +33,7 @@ class ServiceProvider extends Base {
 		/** @var \Illuminate\Config\Repository $config */
 		$config = $this->app->make('config');
 
-		// I'm not binding this as a singleton so that sloppy state management doesn't get a chance to ruin things.
-		$this->app->bind('Intervention\Image\ImageManater', function (Application $app) {
+		$this->app->singleton('Intervention\Image\ImageManager', function (Application $app) {
 			return new ImageManager(array('driver'=>$app->config->get('imager::driver', 'gd')));
 		});
 
