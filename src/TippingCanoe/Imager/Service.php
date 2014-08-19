@@ -312,7 +312,7 @@ class Service {
 		$attributes = array_merge($attributes, [
 			'width' => $imageData->getWidth(),
 			'height' => $imageData->getHeight(),
-			'average_color' => $imageData->getAveragePixelColor(),
+			'average_color' => ($this->app->config->get('imager::driver') == 'gd') ? $imageData->getAveragePixelColor() : $this->app->config->get('imager::default.average_color'),
 			'mime_type' => $image->getMimeType()
 		]);
 		return $this->imageRepository->create($attributes);
@@ -350,7 +350,7 @@ class Service {
 				// If there are config params.
 				if(!empty($filter[1])) {
 					foreach($filter[1] as $property => $value) {
-						$setter = studly_case('set_' . $property);
+						$setter = sprintf('set%s', studly_case($property));
 						$abstract->$setter($value);
 					}
 				}
