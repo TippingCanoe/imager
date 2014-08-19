@@ -37,8 +37,8 @@ class ServiceProvider extends Base {
 			return new ImageManager(array('driver'=>$app->config->get('imager::driver', 'gd')));
 		});
 
-		$this->app->bind('TippingCanoe\Imager\Repository\Image', 'TippingCanoe\Imager\Repository\DbImage');
-		
+		$this->app->bind('TippingCanoe\Imager\Repository\Image', $this->app->config->get('imager::repository.image'));
+
 
 		$this->app->singleton('TippingCanoe\Imager\Service', function (Application $app) use ($config) {
 
@@ -59,7 +59,7 @@ class ServiceProvider extends Base {
 				$driver = $app->make($abstract);
 
 				foreach($driverConfig as $property => $value) {
-					$setter = studly_case('set_' . $property);
+					$setter = sprintf('set%s', studly_case($property));
 					$driver->$setter($value);
 				}
 

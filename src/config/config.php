@@ -23,6 +23,14 @@
 
     ],
 
+    'default' => [
+    	'average_color' => '000000'
+    ],
+
+	'repository' => [
+		'image' => 'TippingCanoe\Imager\Repository\DbImage'
+	],
+
 	//
 	// Amazon S3 Client
 	//
