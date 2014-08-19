@@ -307,7 +307,7 @@ class Service {
 	protected function createImageRecord(File $image, array $attributes = []) {
 
 		// Obtain image metadata and save the record to the database.
-		$imageData = $this->intervention->make($image->getRealPath());
+		$imageData = new ImageData($image, $this->intervention->make($image));
 
 		$attributes = array_merge($attributes, [
 			'width' => $imageData->getWidth(),
@@ -315,6 +315,7 @@ class Service {
 			'average_color' => $imageData->getAveragePixelColor(),
 			'mime_type' => $image->getMimeType()
 		]);
+
 		return $this->imageRepository->create($attributes);
 
 	}

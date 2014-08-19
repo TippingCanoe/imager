@@ -47,10 +47,13 @@ class ImageData {
 	 * @return string
 	 */
 	public function getAveragePixelColor() {
+
 		$this->intervention->resize(1,1);
 		$color = substr($this->intervention->pickColor(0,0, 'hex'), 1);
 		$this->intervention->reset();
+
 		return $color;
+
 	}
 
 }
