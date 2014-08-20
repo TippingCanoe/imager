@@ -307,7 +307,7 @@ class Service {
 	protected function createImageRecord(File $image, array $attributes = []) {
 
 		// Obtain image metadata and save the record to the database.
-		$imageData = new ImageData($image, $this->intervention->make($image));
+		$imageData = new ImageData($image, $this->intervention->make($image->getRealPath()));
 
 		$attributes = array_merge($attributes, [
 			'width' => $imageData->getWidth(),
