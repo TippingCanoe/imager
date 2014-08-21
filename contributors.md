@@ -6,3 +6,4 @@ The following people have taken the time to improve Imager!
   * Amazon S3 Storage Driver
 * **[Pavel Genov](https://github.com/pafelin)**
   * Blur Processor
+  * FTP Storage

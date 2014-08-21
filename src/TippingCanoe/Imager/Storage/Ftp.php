@@ -1,53 +1,62 @@
 <?php namespace TippingCanoe\Imager\Storage;
 
+use Symfony\Component\HttpFoundation\File\File;
+use TippingCanoe\Imager\Mime;
+use TippingCanoe\Imager\Model\Image;
+use FtpPhp\FtpClient;
 
-class Ftp /* implements Driver */ {
+class Ftp extends Base {
 
-/*
- * OLD FTP STORAGE CODE.
+	protected $ftp;
 
-		//
-		// FTP Storage
-		//
-		if(isset($this->config['storage']['ftp']) && is_array($this->config['storage']['ftp'])) {
+	protected $root;
 
-			$ftpClient = new FtpClient();
-			$ftpClient->connect(
-				$this->config['storage']['ftp']['host'],
-				false,
-				$this->config['storage']['ftp']['port']
-			);
-			$ftpClient->login(
-				$this->config['storage']['ftp']['username'],
-				$this->config['storage']['ftp']['password']
-			);
+	protected $publicUrl;
 
-			$ftpClient->passive();
+	public function setRoot($value) {
+		$this->root = $value;
+	}
 
-			foreach($images as $imagePath => $imageFile) {
+	public function setConnection($value) {
+		$this->ftp = new FtpClient($value);
+	}
 
-				$saveFile = sprintf('%s/%s', $this->config['storage']['ftp']['path'], $imagePath);
+	public function setPublicUrl($value) {
+		$this->publicUrl = $value;
+	}
 
-				$dir = dirname($saveFile);
+	public function saveFile(File $file, Image $image, array $filters = []){
 
-				try {
-					$ftpClient->changeDirectory($dir);
-					$dirExists = true;
-				}
-				catch(Exception $e) {
-					$dirExists = false;
-				}
+		$this->ftp->put($this->root . '/'. $this->generateFileName($image, $filters), $file->getRealPath() );
+	}
 
-				$ftpClient->changeDirectory('/');
+	public function tempOriginal(Image $image) {
 
-				if(!$dirExists){
-					$ftpClient->createDirectory($dir);
-				}
+		// Recreate original filename
+		$tempOriginalPath = tempnam(sys_get_temp_dir(), null);
 
-				$ftpClient->put($saveFile, $imageFile, FTP_BINARY);
-			}
-		}
+		$originalPath = sprintf('%s-%s.%s',
+			$image->getKey(),
+			$this->generateHash($image),
+			Mime::getExtensionForMimeType($image->mime_type)
+		);
 
- */
+		// Download file
+		$this->ftp->fget($tempOriginalPath, $originalPath, FtpClient::ASCII);
 
+		return new File($tempOriginalPath);
+
+	}
+
+	public function getPublicUri(Image $image, array $filters = []){
+		return sprintf('%s%s', $this->publicUrl, $this->generateFileName($image, $filters));
+	}
+
+	public function delete(Image $image, array $filters = []){
+		$this->ftp->tryDelete($this->generateFileName($image, $filters));
+	}
+
+	public function has(Image $image, array $filters = []) {
+		return $this->ftp->fileExists($this->generateFileName($image, $filters));
+	}
 }
