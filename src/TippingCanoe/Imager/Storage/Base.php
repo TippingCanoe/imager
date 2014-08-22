@@ -1,6 +1,7 @@
 <?php namespace TippingCanoe\Imager\Storage;
 
 use TippingCanoe\Imager\Model\Image;
+use TippingCanoe\Imager\Mime;
 use Symfony\Component\HttpFoundation\File\File;
 /**
  * Abstract BaseStorage class
@@ -32,6 +33,39 @@ abstract class Base implements Driver {
 		$state = $this->recursiveKeySort($state);
 
 		return md5(json_encode($state));
+
+	}
+
+	/**
+	 * Utility method to ensure that key signatures always appear in the same order.
+	 *
+	 * @param array $array
+	 * @return array
+	 */
+	protected function recursiveKeySort(array $array) {
+
+		ksort($array);
+
+		foreach($array as $key => $value)
+			if(is_array($value))
+				$array[$key] = $this->recursiveKeySort($value);
+
+		return $array;
+
+	}
+
+	/**
+	 * @param Image $image
+	 * @param array $filters
+	 * @return string
+	 */
+	protected function generateFileName(Image $image, array $filters = []) {
+
+		return sprintf('%s-%s.%s',
+			$image->getKey(),
+			$this->generateHash($image, $filters),
+			Mime::getExtensionForMimeType($image->mime_type)
+		);
 
 	}
 } 

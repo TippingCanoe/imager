@@ -100,6 +100,7 @@ class Filesystem extends Base {
 	 *
 	 * @param Image $image
 	 * @return File
+	 * @throws \Exception
 	 */
 	public function tempOriginal(Image $image) {
 
@@ -112,7 +113,9 @@ class Filesystem extends Base {
 
 		$tempOriginalPath = tempnam(sys_get_temp_dir(), null);
 
-		copy($originalPath, $tempOriginalPath);
+		if (!copy($originalPath, $tempOriginalPath)) {
+			throw new \Exception('Imager couldn\'t copy the original image to the temporary location');
+		}
 
 		return new File($tempOriginalPath);
 
@@ -134,39 +137,8 @@ class Filesystem extends Base {
 	 * @param array $filters
 	 * @return string
 	 */
-	protected function generateFileName(Image $image, array $filters = []) {
-		return sprintf('%s-%s.%s',
-			$image->getKey(),
-			$this->generateHash($image, $filters),
-			Mime::getExtensionForMimeType($image->mime_type)
-		);
-	}
-
-	/**
-	 * @param Image $image
-	 * @param array $filters
-	 * @return string
-	 */
 	protected function generateFilePath(Image $image, array $filters = []) {
 		return sprintf('%s/%s', $this->root, $this->generateFileName($image, $filters));
-	}
-
-	/**
-	 * Utility method to ensure that key signatures always appear in the same order.
-	 *
-	 * @param array $array
-	 * @return array
-	 */
-	protected function recursiveKeySort(array $array) {
-
-		ksort($array);
-
-		foreach($array as $key => $value)
-			if(is_array($value))
-				$array[$key] = $this->recursiveKeySort($value);
-
-		return $array;
-
 	}
 
 }

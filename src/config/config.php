@@ -1,7 +1,25 @@
 <?php return [
 
+	/*
+	|--------------------------------------------------------------------------
+	| Processor for images
+	|--------------------------------------------------------------------------
+	|
+	|  This option controls the default image processor that will be used
+	|   when using imager. Of course, you may use other drivers any time you
+	|   wish.
+	|   Supported: "gd", "imagick"
+	*/
 	'driver' => 'gd',
-	// Multiple storage options.
+
+	/*
+	|--------------------------------------------------------------------------
+	| Storage options
+	|--------------------------------------------------------------------------
+	|
+	|   You have to choose one of the supported storage drivers.
+	|   Supported: "Filesystem", "Amazon S3", "Ftp"
+	*/
 	'storage' => [
 
 		'TippingCanoe\Imager\Storage\Filesystem' => [
@@ -14,11 +32,20 @@
 
         ],
 
-		// Amazon S3 Storage Driver
 		/*
+
+		//Ftp
+		'TippingCanoe\Imager\Storage\Ftp' => [
+			'connection' => 'ftp://user:password@host/',
+			'root' => '/imager/', // This directory MUST exist and should finish with "/"
+			'public_url' => sprintf('%sstatic.domain.com/imager', Request::getShemeAndHttpHost()),
+		],
+
+		// Amazon S3 Storage Driver
 		'TippingCanoe\Imager\Storage\S3' => [
 			'bucket' => 'imager'
 		],
+
 		*/
 
     ],

@@ -131,41 +131,4 @@ class S3 extends Base {
 
 	}
 
-	//
-	// Utility Methods
-	//
-
-	/**
-	 * @param Image $image
-	 * @param array $filters
-	 * @return string
-	 */
-	protected function generateFileName(Image $image, array $filters = []) {
-
-		return sprintf('%s-%s.%s',
-			$image->getKey(),
-			$this->generateHash($image, $filters),
-			Mime::getExtensionForMimeType($image->mime_type)
-		);
-
-	}
-
-	/**
-	 * Utility method to ensure that key signatures always appear in the same order.
-	 *
-	 * @param array $array
-	 * @return array
-	 */
-	protected function recursiveKeySort(array $array) {
-
-		ksort($array);
-
-		foreach($array as $key => $value)
-			if(is_array($value))
-				$array[$key] = $this->recursiveKeySort($value);
-
-		return $array;
-
-	}
-
 }
