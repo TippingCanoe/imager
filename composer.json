@@ -14,7 +14,11 @@
 		"intervention/image": "2.*",
 		"stojg/crop": "1.*",
 		"aws/aws-sdk-php": "2.5.2",
-        "rjkip/ftp-php": "1.1.*"
+		"rjkip/ftp-php": "1.1.*"
+	},
+	"require-dev": {
+	  "codeception/codeception": "~2.0",
+	  "codeception/mockery-module": "*"
 	},
 	"autoload": {
 		"classmap": [
